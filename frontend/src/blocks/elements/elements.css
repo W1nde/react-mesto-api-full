@@ -1,0 +1,28 @@
+.elements {
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (min-width: 320px){
+    .elements {
+        gap: 20px;
+        max-width: 282px;
+    } 
+ }
+ 
+ @media screen and (min-width: 720px){
+    .elements {
+        margin-top: 47.25px;
+        gap: 17px;
+        grid-template-columns: repeat(2,fit-content(282px));
+        max-width: 580px;
+     } 
+ }
+ 
+ @media screen and (min-width: 1024px){ 
+    .elements {
+        grid-template-columns: repeat(3,fit-content(282px));
+        max-width: 880px;
+     } 
+ }

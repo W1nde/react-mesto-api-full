@@ -1,0 +1,5 @@
+.popup__pic-container {
+    position: relative;
+    max-width: 75vw;
+    margin: auto;
+  }

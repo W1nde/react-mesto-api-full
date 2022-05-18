@@ -1,0 +1,28 @@
+.footer__title {
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    margin: 0;
+}
+
+@media screen and (min-width: 320px) {
+    .footer__title {
+        font-size: 14px;
+        line-height: 17px;
+        margin-left: 19px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .footer__title {
+        font-size: 18px;
+        line-height: 22px;
+        margin-left: 20px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .footer__title {
+        margin-left: 0;
+    }
+}

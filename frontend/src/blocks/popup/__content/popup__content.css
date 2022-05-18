@@ -1,0 +1,23 @@
+.popup__content {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    margin: auto;
+    vertical-align: middle;
+    z-index: 3;
+    align-items: center;
+}
+
+@media screen and (min-width: 320px) {
+    .popup__content {
+        width: 292px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .popup__content {
+        width: 430px;
+    }
+}

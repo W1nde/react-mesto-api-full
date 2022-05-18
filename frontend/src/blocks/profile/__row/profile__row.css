@@ -1,0 +1,20 @@
+.profile__row {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media screen and (min-width: 320px) {
+    .profile__row {
+        width: 282px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .profile__row {
+        width: 336px;
+    }
+}

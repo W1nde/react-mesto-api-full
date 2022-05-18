@@ -1,0 +1,6 @@
+.popup__span {
+    text-align: left;
+    display: inline-block;
+    min-height: 25px;
+    width: 358px;
+}

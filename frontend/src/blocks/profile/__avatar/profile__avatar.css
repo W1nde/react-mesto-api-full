@@ -1,0 +1,49 @@
+.profile__avatar {
+    display: flex;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 100px;
+    background-position: center;
+    background-size: cover;
+}
+
+.profile__avatar::before {
+    content: '';
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 1s;
+    background-position: center;
+}
+
+.profile__avatar:hover::before {
+    cursor: pointer;
+    opacity: 0.8;
+    background-image: url('../../../images/edit-pen.svg');
+    background-size: 26px 26px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+@media screen and (min-width: 320px) {
+    .profile__avatar {
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 22.5px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .profile__avatar {
+        margin: 0;
+        margin-right: 30px;
+    }
+}
+

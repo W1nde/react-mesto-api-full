@@ -1,0 +1,10 @@
+.popup__line {
+    display: flex;
+    width: 358px;
+    opacity: 0.2;
+    border: 1px solid #000000;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
