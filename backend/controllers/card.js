@@ -54,15 +54,19 @@ module.exports.dislikeCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  const { cardId } = req.params;
-  Card.findById(cardId)
-    .orFail(() => new NotFound("Нет карточки по заданному ID"))
+  Card.findById(req.params.cardId)
+    .orFail()
+    .catch(() => new NotFound('Карточка не найдена'))
     .then((card) => {
-      if (!card.owner.equals(req.user._id)) {
-        return next(new Forbidden("Нельзя удалить чужую карточку"));
+      console.log(card);
+      if (req.user._id !== card.owner.toString()) {
+        throw new Forbidden('Вы не можете удалить чужую карточку');
       }
-      return card.remove()
-        .then(() => res.send({ message: "Карточка удалена" }));
+      Card.findByIdAndDelete(req.params.cardId)
+        .then((cardData) => {
+          res.send({ data: cardData });
+        })
+        .catch(next);
     })
     .catch(next);
 };

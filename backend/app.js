@@ -24,6 +24,43 @@ const { login, createUser } = require("./controllers/user");
 const auth = require("./middlewares/auth");
 const errorCatcher = require("./errors/errorCatcher");
 const NotFound = require("./errors/NotFound");
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const allowedCors = [
+  'https://praktikum.tk',
+  'http://praktikum.tk',
+  'localhost:3000',
+  'markshadpalov.students.nomoredomains.xyz',
+  'api.mshadpalov.students.nomoredomains.xyz',
+];
+
+app.use(function (req, res, next) {
+  const { origin } = req.headers;
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', true);
+  }
+  const { method } = req;
+
+  const requestHeaders = req.headers['access-control-request-headers'];
+
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    return res.end();
+  }
+  return next();
+});
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Бум?');
+  }, 0);
+});
 
 app.post("/signin", celebrate({
   body: Joi.object().keys({
@@ -50,6 +87,7 @@ app.all("*", (req, res, next) => {
   next(new NotFound("Страница не существует"));
 });
 
+app.use(errorLogger)
 app.use(errors());
 app.use(errorCatcher);
 

@@ -5,6 +5,8 @@ const NotFound = require("../errors/NotFound");
 const ValidationError = require("../errors/ValidationError");
 const Conflict = require("../errors/Conflict");
 
+const { JWT_SECRET_KEY = 'super-secret-key' } = process.env;
+
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
@@ -86,13 +88,15 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        "super-secret-key",
+        JWT_SECRET_KEY,
         { expiresIn: "7d" },
       );
+      // создание куки токена
       res.cookie("jwt", token, {
         maxAge: 3600000,
         httpOnly: true,
-        sameSite: true,
+        secure: true,
+        sameSite: 'None',
       });
       res.send({ token });
     })
