@@ -193,6 +193,30 @@ function App() {
     }
   }, [history])
 
+  function checkTocken() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.getUser(jwt)
+        .then(([{ email }] ) => {
+          setCurrentUser({ ...currentUser, email })
+          setLoggedIn(true)
+        })
+        .catch((err) => console.log(err))
+    }
+  }
+
+  React.useEffect(() => {
+    checkTocken();
+    if (loggedIn)
+      Promise.all([api.getCards(), api.getUserInfo()])
+        .then(([cards, userInfo]) => {
+          setCurrentUser({ ...currentUser, ...userInfo });
+          setCards(cards)
+        })
+        .catch(err => `Данные пользователя не получены : ${err}`)
+  }, [loggedIn]);
+  
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className='page'>
