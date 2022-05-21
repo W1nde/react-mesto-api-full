@@ -2,6 +2,7 @@ const Card = require("../models/card");
 const NotFound = require("../errors/NotFound");
 const Forbidden = require("../errors/Forbidden");
 const ValidationError = require("../errors/ValidationError");
+const CastError = require("../errors/CastError")
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -35,7 +36,12 @@ module.exports.likeCard = (req, res, next) => {
       }
       return res.send(card);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "CastError") {
+        next(new CastError("Переданы некорректные данные"));
+    }
+  })
+  .catch(next)
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -50,7 +56,12 @@ module.exports.dislikeCard = (req, res, next) => {
       }
       return res.send(card);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "CastError") {
+        next(new CastError("Переданы некорректные данные"));
+    }
+  })
+  .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -68,5 +79,10 @@ module.exports.deleteCard = (req, res, next) => {
         })
         .catch(next);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "CastError") {
+        next(new CastError("Переданы некорректные данные"));
+    }
+  })
+  .catch(next);
 };

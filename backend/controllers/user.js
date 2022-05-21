@@ -4,6 +4,7 @@ const User = require("../models/user");
 const NotFound = require("../errors/NotFound");
 const ValidationError = require("../errors/ValidationError");
 const Conflict = require("../errors/Conflict");
+const CastError = require("../errors/CastError")
 
 const { JWT_SECRET_KEY = 'super-secret-key' } = process.env;
 
@@ -43,7 +44,12 @@ module.exports.createUser = (req, res, next) => {
 module.exports.getUser = (req, res, next) => {
   User.find({})
     .then((user) => res.send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === "CastError") {
+        next(new CastError("Переданы некорректные данные"));
+    }
+    next(err);
+  })
 };
 
 module.exports.getUserId = (req, res, next) => {
@@ -59,11 +65,14 @@ module.exports.getUserId = (req, res, next) => {
 
 module.exports.patchProfile = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, new: true  })
     .then((user) => res.send({ _id: user._id, name, about }))
     .catch((err) => {
       if (err.name === "ValidationError") {
         next(new ValidationError("Переданы некорректные данные"));
+      }
+      if (err.name === "CastError") {
+        next(new CastError("Переданы некорректные данные"));
       }
       next(err);
     });
@@ -71,7 +80,7 @@ module.exports.patchProfile = (req, res, next) => {
 
 module.exports.patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true  })
     .then((user) => res.send({ _id: user._id, avatar }))
     .catch((err) => {
       if (err.name === "ValidationError") {
