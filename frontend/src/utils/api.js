@@ -63,7 +63,7 @@ class Api {
       body: JSON.stringify(avatar)
     }).then(this._getResponse)
   }
-  
+
   deleteCard(_id) {
     return fetch(`${this._adress}/cards/${_id}`, {
       method: 'DELETE',
@@ -88,8 +88,7 @@ class Api {
 }
 
 const api = new Api ({
-  adress: 'https://mesto.nomoreparties.co/v1/cohort-35/',
-  token: '3fdbcb9c-8f37-4908-83ea-7fa8f283a235'
+  adress: 'api.mshadpalov.students.nomoredomains.xyz',
 })
 
 export default api;
