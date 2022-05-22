@@ -30,8 +30,12 @@ const allowedCors = [
   'https://praktikum.tk',
   'http://praktikum.tk',
   'localhost:3000',
-  'markshadpalov.students.nomoredomains.xyz',
-  'api.mshadpalov.students.nomoredomains.xyz',
+  'http://localhost:3000',
+  'https://localhost:3000',
+  'http://markshadpalov.students.nomoredomains.xyz',
+  'https://markshadpalov.students.nomoredomains.xyz',
+  'http://api.mshadpalov.students.nomoredomains.xyz',
+  'https://api.mshadpalov.students.nomoredomains.xyz'
 ];
 
 app.use(function (req, res, next) {

@@ -1,7 +1,7 @@
 class Api {
 
-  constructor( {adress, token} ) {
-    this._adress = adress;
+  constructor( {address, token} ) {
+    this._address = address;
     this._token = token;
   }
 
@@ -10,7 +10,7 @@ class Api {
   }
 
   getCards() {
-    return fetch(`${this._adress}/cards`, {
+    return fetch(`${this._address}/cards`, {
       headers: {
         authorization: this._token
       }
@@ -18,8 +18,9 @@ class Api {
   }
 
   addCard({name, link}) {
-    return fetch(`${this._adress}/cards`, {
+    return fetch(`${this._address}/cards`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         authorization: this._token,
         'Content-type': 'application/json'
@@ -32,7 +33,7 @@ class Api {
   }
 
   getUserInfo() {
-    return fetch(`${this._adress}/users/me`, {
+    return fetch(`${this._address}/users/me`, {
       headers: {
         authorization: this._token
       }
@@ -40,8 +41,9 @@ class Api {
   }
 
   updateUserInfo = ({name, about}) => {
-    return fetch(`${this._adress}/users/me`, {
+    return fetch(`${this._address}/users/me`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         authorization: this._token,
         'Content-type': 'application/json'
@@ -54,8 +56,9 @@ class Api {
   }
 
   updateAvatarInfo(avatar) {
-    return fetch(`${this._adress}/users/me/avatar`, {
+    return fetch(`${this._address}/users/me/avatar`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
         authorization: this._token,
         'Content-type': 'application/json'
@@ -65,8 +68,9 @@ class Api {
   }
 
   deleteCard(_id) {
-    return fetch(`${this._adress}/cards/${_id}`, {
+    return fetch(`${this._address}/cards/${_id}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         authorization: this._token
       }
@@ -74,8 +78,9 @@ class Api {
   }
 
   like(id, isLiked) {
-    return fetch(`${this._adress}/cards/${id}/likes`, {
+    return fetch(`${this._address}/cards/${id}/likes`, {
       method: isLiked ? 'PUT' : 'DELETE',
+      credentials: 'include',
       headers: {
         authorization: this._token
       }
@@ -88,7 +93,7 @@ class Api {
 }
 
 const api = new Api ({
-  adress: 'api.mshadpalov.students.nomoredomains.xyz',
+  address: 'https://api.mshadpalov.students.nomoredomains.xyz',
 })
 
 export default api;
