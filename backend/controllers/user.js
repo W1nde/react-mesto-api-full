@@ -13,17 +13,10 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
-  const createUser = (hash) => User.create({
-    name,
-    about,
-    avatar,
-    email,
-    password: hash,
-  });
-  bcrypt
-    .hash(password, 10)
-    .then((hash) => createUser(hash))
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => {
       const { _id } = user;
       res.send({
@@ -36,9 +29,12 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new Conflict("Пользователь с таким E-mail уже зарегистрирован"));
+        next(new Conflict('Пользователь с таким e-mail уже зарегистрирован'));
+      } else if (err.name === 'CastError') {
+        next(new ValidationError('Переданы некорректные данные id пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
