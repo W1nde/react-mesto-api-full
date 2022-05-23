@@ -12,7 +12,7 @@ class Api {
   getCards() {
     return fetch(`${this._address}/cards`, {
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${this._token}`
       }
     }).then(this._getResponse)
   }
@@ -22,7 +22,7 @@ class Api {
       method: 'POST',
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${this._token}`,
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
@@ -35,7 +35,7 @@ class Api {
   getUserInfo() {
     return fetch(`${this._address}/users/me`, {
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${this._token}`
       }
     }).then(this._getResponse)
   }
@@ -45,7 +45,7 @@ class Api {
       method: 'PATCH',
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${this._token}`,
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
@@ -60,7 +60,7 @@ class Api {
       method: 'PATCH',
       credentials: 'include',
       headers: {
-        authorization: this._token,
+        authorization: `Bearer ${this._token}`,
         'Content-type': 'application/json'
       },
       body: JSON.stringify(avatar)
@@ -72,7 +72,7 @@ class Api {
       method: 'DELETE',
       credentials: 'include',
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${this._token}`
       }
     }).then(this._getResponse)
   }
@@ -82,7 +82,7 @@ class Api {
       method: isLiked ? 'PUT' : 'DELETE',
       credentials: 'include',
       headers: {
-        authorization: this._token
+        authorization: `Bearer ${this._token}`
       }
     }).then(this._getResponse)
   }
