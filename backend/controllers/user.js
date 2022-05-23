@@ -7,7 +7,7 @@ const ValidationError = require("../errors/ValidationError");
 const Conflict = require("../errors/Conflict");
 const CastError = require("../errors/CastError")
 
-const { JWT_SECRET_KEY = 'super-secret-key' } = process.env;
+const { JWT_SECRET = 'super-secret-key' } = process.env;
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -94,7 +94,7 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        JWT_SECRET_KEY,
+        JWT_SECRET,
         { expiresIn: "7d" },
       );
       // создание куки токена
