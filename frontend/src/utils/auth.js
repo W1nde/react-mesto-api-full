@@ -48,6 +48,6 @@ class Auth {
       .then(this._handleResponse);
   }
 }
-const auth = new Auth('http://api.mshadpalov.students.nomoredomains.xyz');
+const auth = new Auth('https://api.mshadpalov.students.nomoredomains.xyz');
 
 export default auth;
