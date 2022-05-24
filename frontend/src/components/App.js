@@ -179,36 +179,6 @@ function App() {
     history.push("/sign-in");
   }
 
-  // React.useEffect(() => {
-  //   if (loggedIn) {
-  //     api
-  //       .getInitialData()
-  //       .then(([userData, cardsList]) => {
-  //         setCurrentUser(userData);
-  //         setCards(cardsList);
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [loggedIn]);
-
-  // React.useEffect(() => {
-  //   const jwt = localStorage.getItem("jwt");
-  //   if (jwt) {
-  //     auth
-  //       .getUser(jwt)
-  //       .then((res) => {
-  //         if (res) {
-  //           setEmail(res.data.email);
-  //           setLoggedIn(true);
-  //           history.push("/");
-  //         } else {
-  //           localStorage.removeItem(jwt);
-  //         }
-  //       })
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [history]);
-
   function checkTocken() {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
