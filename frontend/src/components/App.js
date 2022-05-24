@@ -75,21 +75,20 @@ function App() {
     setSelectedCard(cardData);
   }
 
-  function handleUpdateUser(currentUser) {
+  function handleUpdateUser({ name, about }) {
     api
-      .updateUserInfo({ name: currentUser.name, about: currentUser.about }, token)
-      .then((userData) => {
-        setCurrentUser(userData);
+      .updateUserInfo({ name, about }, token)
+      .then((user) => {
+        setCurrentUser({ ...currentUser, ...user });
       })
-      .catch(
-        (err) => `Не удалось обновить данные пользователя, ошибка: ${err}`
-      );
+      .catch((err) => `Не удалось обновить данные пользователя, ошибка: ${err}`);
   }
 
   function handleUpdateAvatar({ avatar }) {
-    api.updateAvatarInfo({avatar}, token)
-      .then((userData) => {
-        setCurrentUser(userData)
+    api
+      .updateAvatarInfo({avatar}, token)
+      .then(({ avatar }) => {
+        setCurrentUser({ ...currentUser, avatar });
       })
       .catch(err => `Не удалось обновить аватар, ошибка: ${err}`)
   }
