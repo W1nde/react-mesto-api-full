@@ -244,16 +244,16 @@ function App() {
               cards={cards}
             />
 
+            <Route>
+              {loggedIn ? <Redirect to="/"/> : <Redirect to="/sign-in"/>}
+            </Route>
+
             <Route path='/sign-up'>
               <Register onSubmit={handleSubmitRegistration}/>
             </Route>
 
             <Route path='/sign-in'>
               <Login onSubmit={handleSubmitAuthorization}/>
-            </Route>
-
-            <Route>
-              {loggedIn ? <Redirect to="/"/> : <Redirect to="/sign-in"/>}
             </Route>
 
           </Switch>
