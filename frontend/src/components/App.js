@@ -243,6 +243,8 @@ function App() {
               cards={cards}
             />
 
+            <Route>{loggedIn ? <Redirect to='/' /> : <Redirect to='sign-in' />}</Route>
+
             <Route path='/sign-up'>
               <Register onSubmit={handleSubmitRegistration}/>
             </Route>
