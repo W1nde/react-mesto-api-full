@@ -11,6 +11,7 @@ class Api {
 
   getCards(token) {
     return fetch(`${this._address}/cards`, {
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${token}`
       }
@@ -34,6 +35,7 @@ class Api {
 
   getUserInfo(token) {
     return fetch(`${this._address}/users/me`, {
+      credentials: 'include',
       headers: {
         authorization: `Bearer ${token}`
       }
