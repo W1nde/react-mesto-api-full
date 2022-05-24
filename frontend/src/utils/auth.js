@@ -1,53 +1,52 @@
 class Auth {
-  constructor(address) {
+    constructor(address) {
       this._address = address;
-  }
-  _handleResponse = (response) => {
+    }
+  
+    _handleResponse = (response) => {
       if (response.ok) {
-          return response.json();
+        return response.json();
       }
       return Promise.reject(`Ошибка ${response.status}`);
-  }
-
-  registration({email, password}) {
+    };
+  
+    registration({ email, password }) {
       return fetch(`${this._address}/signup`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-              "Content-Type": 'application/json',
-          },
-          body: JSON.stringify({
-              email, 
-              password})
-      })
-      .then(this._handleResponse);
-  }
-  authorization({email, password}) {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }).then(this._handleResponse);
+    }
+    authorization({ email, password }) {
       return fetch(`${this._address}/signin`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-              email,
-              password
-          })
-      })
-      .then(this._handleResponse);
-  }
-  getUser(jwt) {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }).then(this._handleResponse);
+    }
+    getUser(jwt) {
       return fetch(`${this._address}/users/me`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-              authorization: `Bearer ${jwt}`,
-              'Content-Type': 'application/json'
-          },
-      })
-      .then(this._handleResponse);
+        method: "GET",
+        credentials: "include",
+        headers: {
+          authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      }).then(this._handleResponse);
+    }
   }
-}
-const auth = new Auth('https://api.mshadpalov.students.nomoredomains.xyz');
-
-export default auth;
+  const auth = new Auth("https://api.mshadpalov.students.nomoredomains.xyz");
+  
+  export default auth;

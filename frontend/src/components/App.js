@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import {Redirect, Route, Switch, useHistory} from 'react-router-dom';
+import React, { useState } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 
-import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from "./ProtectedRoute";
 
-import Register from './Register'
-import Login from './Login'
+import Register from "./Register";
+import Login from "./Login";
 
-import Header from './Header';
-import Main from './Main';
-import Footer from './Footer';
-import ImagePopup from './ImagePopup';
-import PopupAddPlace from './PopupAddPlace';
-import PopupDelete from './PopupDelete';
-import PopupProfileEdit from './PopupProfileEdit';
-import PopupAvatarEdit from './PopupAvatarEdit';
+import Header from "./Header";
+import Main from "./Main";
+import Footer from "./Footer";
+import ImagePopup from "./ImagePopup";
+import PopupAddPlace from "./PopupAddPlace";
+import PopupDelete from "./PopupDelete";
+import PopupProfileEdit from "./PopupProfileEdit";
+import PopupAvatarEdit from "./PopupAvatarEdit";
 
-import InfoTooltip from './InfoTooltip'
+import InfoTooltip from "./InfoTooltip";
 
-import api from '../utils/api';
-import auth from '../utils/auth.js';
+import api from "../utils/api";
+import auth from "../utils/auth.js";
 
-import authSuccess from '../images/authSuccess.svg'
-import authFailure from '../images/authFailure.svg'
+import authSuccess from "../images/authSuccess.svg";
+import authFailure from "../images/authFailure.svg";
+
+const defaultUser = {
+  name: "Jacques Cousteau",
+  about: "Sailor, researcher",
+  avatar: "https://pictures.s3.yandex.net/frontend-developer/common/ava.jpg",
+  _id: "",
+  email: "",
+};
 
 function App() {
   const [cards, setCards] = useState([]);
@@ -33,16 +41,16 @@ function App() {
   const [isTooltipPopupOpen, setIsTooltipPopupOpen] = React.useState(false);
 
   const [selectedCard, setSelectedCard] = useState(null);
-  const [cardToDelete, setCardToDelete] = useState('');
-  const [currentUser, setCurrentUser] = useState({});
+  const [cardToDelete, setCardToDelete] = useState("");
+  const [currentUser, setCurrentUser] = useState(defaultUser);
 
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState('');
-  const [messageTooltip, setMessageTooltip] = React.useState({})
-  
-  const history = useHistory()
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [email, setEmail] = useState("");
+  const [messageTooltip, setMessageTooltip] = React.useState({});
 
-  const token = localStorage.getItem('jwt')
+  const [token, setToken] = React.useState("");
+
+  const history = useHistory();
 
   function handlePopupProfileClick() {
     setIsPopupProfileOpen(true);
@@ -67,7 +75,6 @@ function App() {
     setIsPopupAvatarOpen(false);
     setIsPopupDeleteOpen(false);
     setIsTooltipPopupOpen(false);
-
     setSelectedCard(null);
   }
 
@@ -86,22 +93,20 @@ function App() {
 
   function handleUpdateAvatar({ avatar }) {
     api
-      .updateAvatarInfo({avatar}, token)
+      .updateAvatarInfo({ avatar }, token)
       .then(({ avatar }) => {
         setCurrentUser({ ...currentUser, avatar });
       })
-      .catch(err => `Не удалось обновить аватар, ошибка: ${err}`)
+      .catch((err) => `Не удалось обновить аватар, ошибка: ${err}`);
   }
 
   function handleLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     api
       .like(card._id, !isLiked, token)
       .then((newCard) => {
-        setCards((state) =>
-          state.map((c) => (c._id === card._id ? newCard : c))
-        );
+        setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
       })
       .catch((err) => `Не удалось обновить лайк, ошибка: ${err}`);
   }
@@ -129,108 +134,116 @@ function App() {
   }
 
   function handleSubmitRegistration(data) {
-    auth.registration(data)
+    auth
+      .registration(data)
       .then((res) => {
-        if(res) {
-          history.push('/sign-in')
-          setIsTooltipPopupOpen(true)
-          setMessageTooltip({ message: "Вы успешно зарегистрировались!", img: authSuccess})
-        }        
+        if (res) {
+          history.push("/sign-in");
+          setIsTooltipPopupOpen(true);
+          setMessageTooltip({ message: "Вы успешно зарегистрировались!", img: authSuccess });
+        }
       })
       .catch((err) => {
         console.log(err);
-        setIsTooltipPopupOpen(true)
-        setMessageTooltip({ message: "Что-то пошло не так! Попробуйте еще раз.", img: authFailure })
-
-      })
+        setIsTooltipPopupOpen(true);
+        setMessageTooltip({
+          message: "Что-то пошло не так! Попробуйте еще раз.",
+          img: authFailure,
+        });
+      });
   }
 
   function handleSubmitAuthorization(data) {
-    auth.authorization(data)
+    auth
+      .authorization(data)
       .then((res) => {
-        localStorage.setItem('jwt', res.token);
+        console.log(res.token);
+        localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
         setEmail(data.email);
-        history.push('/')
+        history.push("/");
       })
       .catch((err) => {
         console.log(err);
-        setIsTooltipPopupOpen(true)
-        setMessageTooltip({ message: "Что-то пошло не так! Попробуйте еще раз.", img: authFailure })
-      })
+        setIsTooltipPopupOpen(true);
+        setMessageTooltip({
+          message: "Что-то пошло не так! Попробуйте еще раз.",
+          img: authFailure,
+        });
+      });
   }
 
   function handleLogout() {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem("jwt");
     setLoggedIn(false);
-    history.push('/sign-in');
+    history.push("/sign-in");
   }
 
-  React.useEffect(() => {
-    if (loggedIn) {
-      api.getInitialData()
-        .then(([userData, cardsList]) => {
-          setCurrentUser(userData);
-          setCards(cardsList);
-       })
-      .catch(err => console.log(err));
-    }
-  }, [loggedIn]);
+  // React.useEffect(() => {
+  //   if (loggedIn) {
+  //     api
+  //       .getInitialData()
+  //       .then(([userData, cardsList]) => {
+  //         setCurrentUser(userData);
+  //         setCards(cardsList);
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [loggedIn]);
 
-  React.useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if(jwt) {
-      auth.getUser(jwt)
-        .then((res) => {
-          if(res) {
-            setEmail(res.data.email);
-            setLoggedIn(true);
-            history.push('/');
-          } else {
-            localStorage.removeItem(jwt);
-          }
-        })
-        .catch(err => console.log(err))
-    }
-  }, [history])
+  // React.useEffect(() => {
+  //   const jwt = localStorage.getItem("jwt");
+  //   if (jwt) {
+  //     auth
+  //       .getUser(jwt)
+  //       .then((res) => {
+  //         if (res) {
+  //           setEmail(res.data.email);
+  //           setLoggedIn(true);
+  //           history.push("/");
+  //         } else {
+  //           localStorage.removeItem(jwt);
+  //         }
+  //       })
+  //       .catch((err) => console.log(err));
+  //   }
+  // }, [history]);
 
   function checkTocken() {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem("jwt");
     if (jwt) {
-      auth.getUser(jwt)
-        .then(([{ email }] ) => {
-          setCurrentUser({ ...currentUser, email })
-          setLoggedIn(true)
+      setToken(jwt);
+      auth
+        .getUser(jwt)
+        .then(({ email }) => {
+          setCurrentUser({ ...currentUser, email });
+          setLoggedIn(true);
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
     }
   }
 
   React.useEffect(() => {
     checkTocken();
-    if (loggedIn)
+    if (loggedIn) {
       Promise.all([api.getCards(token), api.getUserInfo(token)])
         .then(([cards, userInfo]) => {
           setCurrentUser({ ...currentUser, ...userInfo });
-          setCards(cards)
+          setCards(cards);
         })
-        .catch(err => `Данные пользователя не получены : ${err}`)
+        .catch((err) => `Данные пользователя не получены : ${err}`);
+    }
   }, [loggedIn]);
-  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className='page'>
-        <div className='page__container'>
-          <Header
-            onLogout={handleLogout}
-            email={email}
-          />
-
+      <div className="page">
+        <div className="page__container">
+          <Header onLogout={handleLogout} email={email} loggedIn={loggedIn} />
           <Switch>
-
             <ProtectedRoute
-              exact path='/'
+              exact
+              path="/"
               loggedIn={loggedIn}
               component={Main}
               onEditProfile={handlePopupProfileClick}
@@ -242,19 +255,22 @@ function App() {
               onConfirmCardDelete={handlePopupDeleteClick}
               cards={cards}
             />
+
+            <Route path="/sign-up">
+              <Register onSubmit={handleSubmitRegistration} />
+            </Route>
+
+            <Route path="/sign-in">
+              <Login onSubmit={handleSubmitAuthorization} />
+            </Route>
+
+            <Route exact path="/">
+              {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
+            </Route>
             
-            <Route path='/sign-up'>
-              <Register onSubmit={handleSubmitRegistration}/>
-            </Route>
-
-            <Route path='/sign-in'>
-              <Login onSubmit={handleSubmitAuthorization}/>
-            </Route>
-
           </Switch>
 
           <Footer />
-          
         </div>
 
         <PopupAddPlace
@@ -288,7 +304,6 @@ function App() {
         />
 
         <ImagePopup card={selectedCard} onClose={closePopups} />
-
       </div>
     </CurrentUserContext.Provider>
   );
