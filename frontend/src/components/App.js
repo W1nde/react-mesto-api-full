@@ -75,7 +75,7 @@ function App() {
 
   function handleUpdateUser(currentUser) {
     api
-      .updateUserInfo({ name: currentUser.name, about: currentUser.about, token })
+      .updateUserInfo({ name: currentUser.name, about: currentUser.about })
       .then((userData) => {
         setCurrentUser(userData);
       })
@@ -85,7 +85,7 @@ function App() {
   }
 
   function handleUpdateAvatar({ avatar }) {
-    api.updateAvatarInfo({avatar}, token)
+    api.updateAvatarInfo({avatar})
       .then((userData) => {
         setCurrentUser(userData)
       })
@@ -96,7 +96,7 @@ function App() {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     api
-      .like(card._id, !isLiked, token)
+      .like(card._id, !isLiked)
       .then((newCard) => {
         setCards((state) =>
           state.map((c) => (c._id === card._id ? newCard : c))
@@ -107,7 +107,7 @@ function App() {
 
   function handleCardDelete(card) {
     api
-      .deleteCard(card._id, token)
+      .deleteCard(card._id)
       .then(() => {
         setCards((state) =>
           state.filter((c) => {
@@ -120,7 +120,7 @@ function App() {
 
   function handleCardCreate({ name, link }) {
     api
-      .addCard({ name, link, token })
+      .addCard({ name, link })
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
@@ -208,7 +208,7 @@ function App() {
   React.useEffect(() => {
     checkTocken();
     if (loggedIn)
-      Promise.all([api.getCards(), api.getUserInfo(), token])
+      Promise.all([api.getCards(), api.getUserInfo()])
         .then(([cards, userInfo]) => {
           setCurrentUser({ ...currentUser, ...userInfo });
           setCards(cards)
