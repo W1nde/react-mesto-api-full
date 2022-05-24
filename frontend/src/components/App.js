@@ -42,6 +42,8 @@ function App() {
   
   const history = useHistory()
 
+  const token = localStorage.getItem('jwt')
+
   function handlePopupProfileClick() {
     setIsPopupProfileOpen(true);
   }
@@ -75,7 +77,7 @@ function App() {
 
   function handleUpdateUser(currentUser) {
     api
-      .updateUserInfo({ name: currentUser.name, about: currentUser.about })
+      .updateUserInfo({ name: currentUser.name, about: currentUser.about }, token)
       .then((userData) => {
         setCurrentUser(userData);
       })
@@ -85,7 +87,7 @@ function App() {
   }
 
   function handleUpdateAvatar({ avatar }) {
-    api.updateAvatarInfo({avatar})
+    api.updateAvatarInfo({avatar}, token)
       .then((userData) => {
         setCurrentUser(userData)
       })
@@ -96,7 +98,7 @@ function App() {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     api
-      .like(card._id, !isLiked)
+      .like(card._id, !isLiked, token)
       .then((newCard) => {
         setCards((state) =>
           state.map((c) => (c._id === card._id ? newCard : c))
@@ -107,7 +109,7 @@ function App() {
 
   function handleCardDelete(card) {
     api
-      .deleteCard(card._id)
+      .deleteCard(card._id, token)
       .then(() => {
         setCards((state) =>
           state.filter((c) => {
@@ -120,7 +122,7 @@ function App() {
 
   function handleCardCreate({ name, link }) {
     api
-      .addCard({ name, link })
+      .addCard({ name, link }, token)
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
@@ -208,7 +210,7 @@ function App() {
   React.useEffect(() => {
     checkTocken();
     if (loggedIn)
-      Promise.all([api.getCards(), api.getUserInfo()])
+      Promise.all([api.getCards(token), api.getUserInfo(token)])
         .then(([cards, userInfo]) => {
           setCurrentUser({ ...currentUser, ...userInfo });
           setCards(cards)
